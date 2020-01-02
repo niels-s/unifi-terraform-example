@@ -3,8 +3,14 @@ data "ignition_config" "unifi_controller" {
     data.ignition_file.profile_variables.rendered,
     data.ignition_file.sshd_config.rendered
   ]
+
+  filesystems = [
+    data.ignition_filesystem.unifi_controller_data_mount.rendered
+  ]
+
   systemd = [
-    data.ignition_systemd_unit.sshd_port.rendered
+    data.ignition_systemd_unit.sshd_port.rendered,
+    data.ignition_systemd_unit.unifi_controller_data_unit.rendered
   ]
 }
 
@@ -57,3 +63,31 @@ data "ignition_systemd_unit" "sshd_port" {
   }
 }
 
+// Configure Block Storage Mount
+data "ignition_filesystem" "unifi_controller_data_mount" {
+  name = "unifi_controller_data_mount"
+
+  mount {
+    device          = "/dev/disk/by-id/scsi-0DO_Volume_sdb"
+    wipe_filesystem = false
+    format          = "ext4"
+  }
+}
+
+data "ignition_systemd_unit" "unifi_controller_data_unit" {
+  name    = "mnt-unifi_controller_data.mount"
+  enabled = true
+  content = <<-CONFIG
+    [Unit]
+    Description = Unifi Controller Data Mount
+
+    [Mount]
+    What=/dev/disk/by-id/scsi-0DO_Volume_sdb
+    Where=/mnt/unifi_controller_data
+    Options=defaults,discard,noatime
+    Type=ext4
+
+    [Install]
+    WantedBy = multi-user.target
+  CONFIG
+}

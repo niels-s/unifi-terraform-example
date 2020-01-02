@@ -12,3 +12,16 @@ resource "digitalocean_droplet" "unifi_controller" {
     create_before_destroy = true
   }
 }
+
+resource "digitalocean_volume" "unifi_controller_data" {
+  region                  = digitalocean_droplet.unifi_controller.region
+  name                    = "unifi_controller_data"
+  size                    = 20
+  initial_filesystem_type = "ext4"
+  description             = "Store the MongoDB data of the Unifi Controller"
+}
+
+resource "digitalocean_volume_attachment" "unifi_controller" {
+  droplet_id = digitalocean_droplet.unifi_controller.id
+  volume_id  = digitalocean_volume.unifi_controller_data.id
+}
