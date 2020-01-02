@@ -17,3 +17,8 @@ variable "hostname" {
   type        = string
   description = "Fully Qualified host name of the server, this will be used to request certificat with Let's Encrypt"
 }
+
+variable "certbot_email" {
+  type        = string
+  description = "Email used by Certbot to provision Let's Encrypt certificates"
+}
