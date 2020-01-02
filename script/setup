@@ -1,0 +1,16 @@
+#!/bin/sh
+
+set -e
+
+if ! command -v doctl >/dev/null 2>&1; then
+  brew "install doctl
+  echo Use 'doctl auth init' to setup authentication.
+  Next list the cluster you want to use with:
+  'doctl kubernetes cluster list'
+  Finally make sure you authenticate kubectl so you can reach the K8s cluster:
+  'doctl kubernetes cluster kubeconfig save $CLUSTER_ID'0'"
+fi
+
+if ! command -v terraform >/dev/null 2>&1; then
+  brew install terraform
+fi
