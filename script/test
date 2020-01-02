@@ -2,6 +2,8 @@
 
 set -e
 
+cd "$(dirname "$0")/.."
+
 # Validate Terraform configuration
 terraform fmt -diff=true -check=true -recursive
 terraform validate
