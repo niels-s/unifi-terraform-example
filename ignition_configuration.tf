@@ -15,7 +15,8 @@ data "ignition_config" "unifi_controller" {
     data.ignition_systemd_unit.sshd_port.rendered,
     data.ignition_systemd_unit.unifi_controller_data_unit.rendered,
     data.ignition_systemd_unit.install_docker_network_unit.rendered,
-    data.ignition_systemd_unit.nginx_proxy_unit.rendered
+    data.ignition_systemd_unit.nginx_proxy_unit.rendered,
+    data.ignition_systemd_unit.unifi_unit.rendered
   ]
 }
 
@@ -263,6 +264,7 @@ data "ignition_systemd_unit" "nginx_proxy_unit" {
     [Unit]
     Description= Nginx Proxy with Certbot
     After=docker.service
+    After=unifi.service
     Requires=docker.service
     Requires=install_docker_network.service
 
@@ -289,6 +291,38 @@ data "ignition_systemd_unit" "nginx_proxy_unit" {
         -v /mnt/unifi_controller_data/nginx/conf.d:/etc/nginx/user.conf.d:ro \
         -v /mnt/unifi_controller_data/nginx/streams.d:/etc/nginx/streams.d:ro \
         staticfloat/nginx-certbot
+
+    [Install]
+    WantedBy=multi-user.target
+  CONFIG
+}
+
+// Setup Unifi controller
+data "ignition_systemd_unit" "unifi_unit" {
+  name    = "unifi.service"
+  enabled = true
+
+  content = <<-CONFIG
+    [Unit]
+    Description=Unifi Controller
+    After=docker.service
+    Requires=docker.service
+    Requires=install_docker_network.service
+
+    [Service]
+    Restart=always
+    TimeoutStartSec=0
+    ExecStartPre=/usr/bin/docker pull jacobalberty/unifi:5.12
+    ExecStartPre=-/usr/bin/docker stop unifi
+    ExecStartPre=-/usr/bin/docker rm unifi
+    ExecStart=/usr/bin/docker run \
+      --name unifi \
+      --network unifi-network \
+      --restart=no \
+      -e TZ='${var.timezone}' \
+      --init \
+      -v /mnt/unifi_controller_data/unifi:/unifi:rw \
+      jacobalberty/unifi:5.12
 
     [Install]
     WantedBy=multi-user.target

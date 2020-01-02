@@ -22,3 +22,9 @@ variable "certbot_email" {
   type        = string
   description = "Email used by Certbot to provision Let's Encrypt certificates"
 }
+
+variable "timezone" {
+  type        = string
+  description = "Configure the Timezone used by Unifi Controller"
+  default     = "Europe/Brussels"
+}
