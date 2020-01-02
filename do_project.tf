@@ -6,7 +6,8 @@ resource "digitalocean_project" "unifi" {
   resources = [
     "do:droplet:${digitalocean_droplet.unifi_controller.id}",
     "do:volume:${digitalocean_volume.unifi_controller_data.id}",
-    "do:floatingip:${digitalocean_floating_ip.unifi_controller.ip_address}"
+    "do:floatingip:${digitalocean_floating_ip.unifi_controller.ip_address}",
+    "do:firewall:${digitalocean_firewall.unifi.id}"
   ]
 }
 
