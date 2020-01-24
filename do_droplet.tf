@@ -17,7 +17,7 @@ resource "digitalocean_volume" "unifi_controller_data" {
   region                  = digitalocean_droplet.unifi_controller.region
   name                    = "unifi_controller_data"
   size                    = 20
-  initial_filesystem_type = "ext4"
+  initial_filesystem_type = "xfs"
   description             = "Store the MongoDB data of the Unifi Controller"
 }
 

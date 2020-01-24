@@ -76,7 +76,7 @@ data "ignition_filesystem" "unifi_controller_data_mount" {
   mount {
     device          = "/dev/disk/by-id/scsi-0DO_Volume_sdb"
     wipe_filesystem = false
-    format          = "ext4"
+    format          = "xfs"
   }
 }
 
@@ -91,7 +91,7 @@ data "ignition_systemd_unit" "unifi_controller_data_unit" {
     What=/dev/disk/by-id/scsi-0DO_Volume_sdb
     Where=/mnt/unifi_controller_data
     Options=defaults,discard,noatime
-    Type=ext4
+    Type=xfs
 
     [Install]
     WantedBy = multi-user.target
