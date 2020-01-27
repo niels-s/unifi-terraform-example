@@ -2,7 +2,7 @@ resource "digitalocean_droplet" "unifi_controller" {
   image       = "coreos-stable"
   name        = var.hostname
   region      = "ams3"
-  size        = "s-1vcpu-1gb" # TODO: change size eventually
+  size        = "s-1vcpu-2gb"
   ipv6        = true
   resize_disk = false
   ssh_keys    = [digitalocean_ssh_key.ssh_key.fingerprint]
