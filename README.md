@@ -46,6 +46,15 @@ I suggest using an `.auto.tfvars` file which is the most convient option however
 there are several other options check the Terraform documentation for more
 information.
 
+# Blog Posts
+
+- [Part 1: Basic CoreOS host](https://hodari.be/posts/2019_12_28_unifi_controller_setup_basic_coreos_host?ref=github.com/niels-s/unifi-terraform-example)
+- [Part 2: External Block mount](https://hodari.be/posts/2019_12_29_unifi_controller_setup_external_mount?ref=github.com/niels-s/unifi-terraform-example)
+- [Part 3: Nginx Proxy](https://hodari.be/posts/2019_12_30_unifi_controller_setup_nginx_proxy?ref=github.com/niels-s/unifi-terraform-example)
+- [Part 4: Setup the Unifi Controller](https://hodari.be/posts/2019_12_31_unifi_controller_setup_unifi_controller?ref=github.com/niels-s/unifi-terraform-example)
+- [Part 5: Firewall](https://hodari.be/posts/2020_01_02_unifi_controller_setup_firewall?ref=github.com/niels-s/unifi-terraform-example)
+- [Follow up: monitoring with Digital Ocean](https://hodari.be/posts/2020_01_20_unifi_controller_add_do_agent?ref=github.com/niels-s/unifi-terraform-example)
+
 ### TODO
 
 - Fix mount to take full size of block storage. When we started using the block
