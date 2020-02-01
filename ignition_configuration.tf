@@ -16,7 +16,8 @@ data "ignition_config" "unifi_controller" {
     data.ignition_systemd_unit.unifi_controller_data_unit.rendered,
     data.ignition_systemd_unit.install_docker_network_unit.rendered,
     data.ignition_systemd_unit.nginx_proxy_unit.rendered,
-    data.ignition_systemd_unit.unifi_unit.rendered
+    data.ignition_systemd_unit.unifi_unit.rendered,
+    data.ignition_systemd_unit.do_agent_unit.rendered
   ]
 }
 
@@ -323,6 +324,36 @@ data "ignition_systemd_unit" "unifi_unit" {
       --init \
       -v /mnt/unifi_controller_data/unifi:/unifi:rw \
       jacobalberty/unifi:5.12
+
+    [Install]
+    WantedBy=multi-user.target
+  CONFIG
+}
+
+// DigitalOcean Metric Agent
+data "ignition_systemd_unit" "do_agent_unit" {
+  name    = "do-agent.service"
+  enabled = true
+
+  content = <<-CONFIG
+    [Unit]
+    Description=The DigitalOcean Monitoring Agent
+    Requires=docker.service
+    After=docker.service
+    After=network-online.target
+    Wants=network-online.target
+
+    [Service]
+    Restart=always
+    ExecStartPre=/usr/bin/docker pull digitalocean/do-agent:stable
+    ExecStartPre=-/usr/bin/docker stop do-agent
+    ExecStartPre=-/usr/bin/docker rm do-agent
+    ExecStart=/usr/bin/docker run \
+        --name do-agent \
+        --restart=no \
+        -v /proc:/host/proc:ro \
+        -v /sys:/host/sys:ro \
+        digitalocean/do-agent:stable
 
     [Install]
     WantedBy=multi-user.target
